@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, Body, ParseIntPipe } from '@nestjs/common';
 import { BookService } from './book.service';
-
+import { AddListDto, MoveToFavoriteDto, DeleteOneDto } from './book.dto';
 
 @Controller('book')
 export class BookController {
@@ -15,36 +15,29 @@ export class BookController {
     return this.bookService.getOne(id)
   }
   @Get('getFavorites/:userId')
-  getFavorites(@Param('userId') userId: number) {
+  getFavorites(@Param('userId', ParseIntPipe) userId: number,) {
     return this.bookService.getFavorites(userId)
   }
 
 
   @Post('addList')
-  addOneInList(@Body() dto: AddDto) {
-    return this.bookService.addOneInList(dto)
-
+  addOneInList(@Body() addListDto: AddListDto) {
+    return this.bookService.addOneInList(addListDto)
   }
 
   @Post('addFavorite')
-  moveOneToFavorite(@Body() dto: { id: string, user_id:number }) {
-    return this.bookService.moveOneToFavorite(dto)
+  moveOneToFavorite(@Body() moveToFavoriteDto: MoveToFavoriteDto) {
+    return this.bookService.moveOneToFavorite(moveToFavoriteDto)
   }
 
 
   @Delete('delete')
-  deleteOne(@Body() dto: { id: string }) {
-    return this.bookService.deleteBook(dto.id)
+  deleteOne(@Body() deleteOneDto: DeleteOneDto) {
+    return this.bookService.deleteBook(deleteOneDto)
   }
 }
 
 
-interface AddDto {
-  id: string;
-  title: string;
-  description: string;
-  authors: Array<string>;
-}
 
 
-export { AddDto }
+
